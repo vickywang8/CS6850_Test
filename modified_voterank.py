@@ -21,7 +21,7 @@ num_initial_spreaders = 100
 elected_spreaders = []
 entropy_parameter = 100
 
-with open('ca-CondMat.txt') as inputfile:
+with open('sim.txt') as inputfile:
 	for line in inputfile:
 		nodes = line.strip().split()
 		nodes.sort()
@@ -70,8 +70,8 @@ for node, neighbors in neighbors_dict.items():
 		# graph[node_index_dict[neighbor]][node_index_dict[node]] = 1
 	average_degree += len(neighbors)
 average_degree /= num_nodes
-dist_matrix = np.load("dist_matrix.npy")
-# print("average degree of the graph is :" + str(average_degree))
+#dist_matrix = np.load("dist_matrix.npy")
+print("average degree of the graph is :" + str(average_degree))
 # dist_matrix = csgraph.shortest_path(graph)
 # print("done with dist_matrix")
 # np.save("dist_matrix", dist_matrix)
@@ -131,7 +131,7 @@ def vote_and_elect(node_voting_info, elected_spreaders):
 		num_votes_received = 0
 		for neighbor in neighbors:
 			num_votes_received += node_voting_info[neighbor][1]
-		num_votes_received = votes_with_entropy(num_votes_received, node, neighbors_dict, elected_spreaders, 3)
+		num_votes_received = votes_with_entropy(num_votes_received, node, neighbors_dict, elected_spreaders, 0)
 		if num_votes_received > max_votes:
 			max_votes = num_votes_received
 			node_with_max_votes = node
@@ -146,18 +146,18 @@ def update_voting_ability(elected_node, neighbors_dict, node_voting_info, averag
 		else:
 			node_voting_info[neighbor] = (node_voting_info[neighbor][0], 0)
 
-# initialize the algorithm
-node_voting_info = {}
-for node in nodes_set:
-	node_voting_info[node] = (0, 1) # (number of votes received, voting power)
-while (len(elected_spreaders) < num_initial_spreaders):
-	elected_node = vote_and_elect(node_voting_info, elected_spreaders)
-	# print(elected_node)
-	if elected_node not in elected_spreaders:
-		elected_spreaders.append(elected_node)
-	node_voting_info[elected_node] = (0, 0)
-	update_voting_ability(elected_node, neighbors_dict, node_voting_info, average_degree)
-print(elected_spreaders)
+#initialize the algorithm
+# node_voting_info = {}
+# for node in nodes_set:
+# 	node_voting_info[node] = (0, 1) # (number of votes received, voting power)
+# while (len(elected_spreaders) < num_initial_spreaders):
+# 	elected_node = vote_and_elect(node_voting_info, elected_spreaders)
+# 	# print(elected_node)
+# 	if elected_node not in elected_spreaders:
+# 		elected_spreaders.append(elected_node)
+# 	node_voting_info[elected_node] = (0, 0)
+# 	update_voting_ability(elected_node, neighbors_dict, node_voting_info, average_degree)
+# print(elected_spreaders)
 
 ### JUST INFORMATION ENTROPY (NOT VOTERANK CODE)
 # nodes_votes = []
@@ -189,8 +189,9 @@ condmat_elected_spreaders_with_dist_100_multiply = ['73647', '30874', '52658', '
 # >>> len(set(condmat_elected_spreaders_without_alpha_200[:100])condmat_elected_spreaders_without_alpha_200[:100])).intersection(set(condmat_elected_spreaders_with_dist_100)))
 # 69
 # Average % of infected nodes: 0.40498378939177776
-###################################
-
+eu_elected_spreaders_200 = ['160', '121', '86', '5', '13', '377', '211', '84', '64', '971', '498', '82', '533', '411', '129', '44', '333', '165', '96', '7', '65', '301', '63', '74', '107', '2', '21', '295', '269', '820', '114', '546', '340', '549', '353', '27', '401', '231', '209', '12', '141', '87', '69', '258', '412', '440', '509', '14', '290', '375', '191', '316', '115', '414', '222', '366', '592', '560', '170', '405', '234', '206', '106', '543', '544', '376', '499', '92', '243', '569', '213', '285', '495', '24', '52', '189', '462', '137', '306', '218', '232', '327', '335', '435', '163', '242', '409', '523', '23', '466', '322', '723', '6', '577', '140', '417', '452', '516', '88', '506', '18', '128', '62', '230', '350', '325', '199', '57', '936', '329', '38', '299', '263', '124', '215', '846', '381', '521', '380', '613', '238', '504', '641', '184', '748', '777', '271', '303', '145', '564', '157', '408', '635', '393', '321', '55', '611', '166', '438', '300', '72', '424', '717', '712', '556', '913', '422', '45', '434', '326', '513', '95', '185', '742', '481', '28', '851', '860', '20', '178', '419', '957', '41', '153', '589', '709', '371', '812', '156', '354', '910', '291', '104', '964', '171', '240', '854', '620', '941', '53', '514', '168', '111', '647', '912', '97', '342', '732', '935', '873', '374', '418', '68', '201', '298', '237', '718', '787', '705', '822']
+ga_elected_spreaders_200 = ['21012', '21281', '15244', '12365', '13929', '13801', '22601', '7650', '2654', '14265', '4364', '2710', '6264', '449', '22691', '23038', '9572', '9639', '10762', '14599', '7689', '3651', '9017', '6583', '13142', '5052', '14157', '1488', '18866', '23614', '1217', '7007', '20511', '1000', '19865', '9471', '7307', '6823', '23382', '4952', '543', '20373', '9124', '24814', '24330', '15066', '9710', '5901', '3501', '15300', '24057', '14924', '22177', '14746', '11372', '10711', '339', '11275', '615', '15108', '4241', '22423', '593', '22457', '1023', '21508', '6512', '25034', '24559', '3113', '8116', '2072', '8823', '24293', '18208', '24696', '24924', '11557', '13276', '23836', '3843', '4416', '20765', '9184', '4575', '18122', '26038', '2042', '18487', '9785', '2115', '17501', '3716', '13520', '13556', '12545', '24371', '16469', '11861', '5346', '11400', '16258', '3811', '6482', '6154', '8254', '11293', '11077', '11696', '17038', '16482', '22555', '7350', '21994', '17626', '5107', '676', '9591', '23114', '4550', '22527', '12842', '21125', '3345', '9629', '13008', '6700', '10532', '21075', '12187', '10096', '17113', '12212', '20328', '6337', '19489', '12927', '6218', '6774', '17075', '23134', '24781', '24833', '10791', '12720', '2846', '13346', '24412', '24097', '12406', '18314', '18030', '6023', '25286', '14952', '3310', '491', '18365', '16368', '3839', '5385', '13859', '14149', '17379', '16154', '1116', '10039', '12587', '6350', '14337', '7045', '18215', '12286', '10801', '482', '13813', '17228', '14534', '15144', '22366', '3909', '18579', '14834', '14690', '24207', '22046', '24439', '12491', '25540', '2287', '1981', '23151', '24385', '8177', '10055', '20478', '5078', '11733', '24489', '19297', '11712', '7712', '811', '1896', '13352', '12599', '9829', '25931', '8851', '22815', '3743', '22483', '13955', '24009', '8612', '4013', '16006', '21089', '20924', '17172', '6838', '4164', '9037', '25006', '6857', '23708', '5695', '13558', '6735', '3547', '18676', '12235', '6427', '19340', '5209', '11502', '8349', '9606', '11318', '3618', '24970', '4624', '15568', '10338', '23503', '4814', '1028', '10310', '16543', '19936', '8408', '15372', '19204', '15357', '8768', '16056', '11964', '4673', '22574', '14123', '19781', '1545', '1765', '22233', '5240', '10130', '9755', '281', '6408', '13966', '21910', '19697', '3032', '17655', '65', '1736', '2116', '26019', '2054', '4834', '24841', '5597', '5425', '9715', '13384', '20940', '21344', '16433', '15395', '25043', '9482', '5156', '9579', '18088', '2222', '15413', '140', '26058', '22051', '19992', '18453', '7479', '3377', '23084', '122', '23665', '13614', '25582', '3804', '13190', '19423', '10588', '14864', '26065', '5172', '7188', '19964', '7154', '5225', '6804', '16039', '6638', '21450', '12472', '7911', '4275', '7194', '23485', '23896', '178', '18940', '8666', '1044', '17359', '22074', '22415', '21220', '14872', '8916', '22265', '8045', '24765', '21943', '5712', '9306', '7125', '24877', '24568', '6813', '135', '24713', '6503', '1817', '25902', '6666', '16717', '8701', '3872', '21466', '20100', '10564', '12930', '11662', '6628', '15182', '17782', '3522', '14886', '5287', '24240', '2912', '6538', '6648', '17006', '21927', '21608', '1149', '7087', '17721', '9025', '10456', '14067', '14770', '3765', '12884', '18408', '25957', '20879', '25435', '23939', '2611', '4896', '17178', '161', '1656', '17750', '7877', '22719', '8471', '6280']###################################
+sim_elected_spreaders_200 = ['735', '483', '531', '889', '675', '729', '647', '873', '546', '14', '169', '550', '538', '669', '946', '865', '608', '829', '853', '64', '145', '530', '876', '513', '566', '114', '923', '520', '338', '937', '560', '827', '58', '557', '558', '950', '504', '257', '476', '358', '196', '719', '921', '866', '693', '109', '231', '768', '767', '775', '322', '296', '328', '149', '279', '858', '494', '324', '381', '800', '692', '717', '36', '122', '273', '309', '638', '219', '505', '289', '238', '246', '327', '207', '297', '522', '776', '373', '182', '451', '966', '221', '116', '745', '429', '554', '824', '791', '514', '206', '174', '159', '959', '33', '325', '582', '275', '707', '11', '893']
 # def infection(neighbors_dict, elected_spreaders, infected_bound = num_nodes*0.5, infection_rate = 0.8):
 # 	infected_set = set(elected_spreaders)
 # 	newly_infected_set = set()
@@ -203,7 +204,7 @@ condmat_elected_spreaders_with_dist_100_multiply = ['73647', '30874', '52658', '
 # 		t+=1
 # 		infected_set = infected_set.union(newly_infected_set)
 # 	return t
-def infection(neighbors_dict, elected_spreaders, fixed_time_steps = 20, infection_rate = 0.5):
+def infection(neighbors_dict, elected_spreaders, fixed_time_steps = 35, infection_rate = 0.5):
 	infected_set = set(elected_spreaders)
 	newly_infected_set = set()
 	t = 0
@@ -216,6 +217,13 @@ def infection(neighbors_dict, elected_spreaders, fixed_time_steps = 20, infectio
 		infected_set = infected_set.union(newly_infected_set)
 	return len(infected_set) / num_nodes
 
+test_spreaders_set = [sim_elected_spreaders_200[:1], sim_elected_spreaders_200[:2], sim_elected_spreaders_200[:3], sim_elected_spreaders_200[:4], sim_elected_spreaders_200[:5], sim_elected_spreaders_200[:6], sim_elected_spreaders_200[:7], sim_elected_spreaders_200[:8], sim_elected_spreaders_200[:9], sim_elected_spreaders_200[:10], sim_elected_spreaders_200[:11], sim_elected_spreaders_200[:12], sim_elected_spreaders_200[:13], sim_elected_spreaders_200[:14], sim_elected_spreaders_200[:15], sim_elected_spreaders_200[:16], sim_elected_spreaders_200[:17], sim_elected_spreaders_200[:18], sim_elected_spreaders_200[:19], sim_elected_spreaders_200[:20], sim_elected_spreaders_200[:30], sim_elected_spreaders_200[:40], sim_elected_spreaders_200[:50], sim_elected_spreaders_200[:60], sim_elected_spreaders_200[:70], sim_elected_spreaders_200[:80], sim_elected_spreaders_200[:90], sim_elected_spreaders_200[:100]]
+for test in test_spreaders_set:
+	avg = 0
+	print("number of initial is " + str(len(test)))
+	for i in range(0,20):
+		avg+=infection(neighbors_dict, test)
+	print("Average % of infected nodes: " + str(avg/20))
 # run infection
 # avg = 0
 # for i in range(0,100):
